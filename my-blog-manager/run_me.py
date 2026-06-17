@@ -25,8 +25,8 @@ def check_node_environment():
     if not os.path.exists("node_modules"):
         print("📦 发现缺失前端依赖，正在尝试运行 npm install (请稍候，这可能需要几分钟)...")
         try:
-            # shell=True 在 Windows 下运行 npm 必须加上
-            subprocess.check_call(["npm", "install"], shell=True)
+            cmd = "npm install" if os.name == 'nt' else ["npm", "install"]
+            subprocess.check_call(cmd, shell=(os.name == 'nt'))
             print("✅ 前端依赖安装成功！")
         except Exception as e:
             print(f"❌ 前端安装失败！请确保你安装了 Node.js。错误: {e}")

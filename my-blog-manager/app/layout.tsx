@@ -17,9 +17,6 @@ import CyberCat from '../components/CyberCat';
 import DanmakuBackground from '../components/DanmakuBackground';
 import GlobalSnow from '../components/GlobalSnow';
 
-// 🌟 1. 引入 Next.js 官方脚本组件
-import Script from 'next/script';
-
 const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
 const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"] });
 const notoSerif = Noto_Serif_SC({ subsets: ["latin"], weight: ["400", "700", "900"], variable: "--font-serif", display: 'swap' });
@@ -45,17 +42,19 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
           }}
         />
 
-        {/* 🌟 3. 核心修复：使用 <Script> 组件替代原生 <script> */}
-        {/* strategy="beforeInteractive" 确保脚本在页面交互前执行，防止闪屏 */}
-        <Script id="handle-splash-logic" strategy="beforeInteractive">
-          {`
-            try {
-              if (sessionStorage.getItem('hasSeenSplash') === 'true') {
-                document.documentElement.classList.add('splash-seen');
-              }
-            } catch (e) {}
-          `}
-        </Script>
+        {/* 🌟 3. 核心修复：使用原生 <script> 在 <head> 中执行 */}
+        <script
+          suppressHydrationWarning
+          dangerouslySetInnerHTML={{
+            __html: `
+              try {
+                if (sessionStorage.getItem('hasSeenSplash') === 'true') {
+                  document.documentElement.classList.add('splash-seen');
+                }
+              } catch (e) {}
+            `
+          }}
+        />
       </head>
 
       <body className="w-screen overflow-x-hidden min-h-full flex flex-col relative transition-colors duration-1000 bg-slate-50 dark:bg-slate-950 font-serif">

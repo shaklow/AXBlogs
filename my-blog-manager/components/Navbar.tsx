@@ -31,11 +31,12 @@ export default function Navbar() {
           const data = await res.json();
           if (data.blogPath) {
             setTargetBlogPath(data.blogPath);
-            localStorage.setItem('targetBlogPath', data.blogPath);
+            try { localStorage.setItem('targetBlogPath', data.blogPath); } catch {}
           }
         }
       } catch (e) {
-        const path = localStorage.getItem('targetBlogPath') || "F:/Projects/my-blog";
+        let path = "F:/Projects/my-blog";
+        try { path = localStorage.getItem('targetBlogPath') || path; } catch {}
         setTargetBlogPath(path);
       }
     };
@@ -160,7 +161,8 @@ export default function Navbar() {
 
   const handleSyncBlogClick = () => {
     if (!targetBlogPath) {
-       const fallback = localStorage.getItem('targetBlogPath') || "F:/Projects/my-blog";
+       let fallback = "F:/Projects/my-blog";
+       try { fallback = localStorage.getItem('targetBlogPath') || fallback; } catch {}
        setTargetBlogPath(fallback);
     }
     setIsOpBoxOpen(false);

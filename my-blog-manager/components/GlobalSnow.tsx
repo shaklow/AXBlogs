@@ -8,11 +8,14 @@ export default function GlobalSnow() {
 
   useEffect(() => {
     setMounted(true);
-    // 1. 初始化检查：从 localStorage 读取或检查 body 类名
     const checkWinter = () => {
-      const isActive = document.body.classList.contains("winter-mode") || localStorage.getItem("winter-mode") === "true";
-      setIsWinter(isActive);
-      if (isActive) document.body.classList.add("winter-mode");
+      try {
+        const isActive = document.body.classList.contains("winter-mode") || localStorage.getItem("winter-mode") === "true";
+        setIsWinter(isActive);
+        if (isActive) document.body.classList.add("winter-mode");
+      } catch {
+        setIsWinter(false);
+      }
     };
 
     checkWinter();

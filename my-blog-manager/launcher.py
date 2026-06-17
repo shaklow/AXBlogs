@@ -24,15 +24,19 @@ WINDOW_CONFIG_FILE = os.path.join(EXE_DIR, 'window_config.json')
 
 def release_port(port):
     try:
-        command = f'netstat -ano | findstr :{port}'
-        result = subprocess.check_output(command, shell=True).decode()
-        lines = result.strip().split('\n')
-        for line in lines:
-            parts = line.strip().split()
-            if len(parts) >= 5 and parts[3] == 'LISTENING':
-                pid = parts[-1]
-                subprocess.run(f'taskkill /PID {pid} /F /T', shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-                time.sleep(0.5)
+        if os.name == 'nt':
+            command = f'netstat -ano | findstr :{port}'
+            result = subprocess.check_output(command, shell=True).decode()
+            lines = result.strip().split('\n')
+            for line in lines:
+                parts = line.strip().split()
+                if len(parts) >= 5 and parts[3] == 'LISTENING':
+                    pid = parts[-1]
+                    subprocess.run(f'taskkill /PID {pid} /F /T', shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+                    time.sleep(0.5)
+        else:
+            subprocess.run(f'fuser -k {port}/tcp', shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+            time.sleep(0.5)
     except:
         pass
 
@@ -101,7 +105,14 @@ def run_api(port):
 
 def on_closed():
     if frontend_process:
-        subprocess.run(f"taskkill /F /T /PID {frontend_process.pid}", shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        try:
+            if os.name == 'nt':
+                subprocess.run(f"taskkill /F /T /PID {frontend_process.pid}", shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+            else:
+                frontend_process.terminate()
+                frontend_process.wait(timeout=5)
+        except:
+            frontend_process.kill()
     release_port(frontend_port)
     release_port(backend_port)
     os._exit(0)

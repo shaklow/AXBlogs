@@ -50,7 +50,7 @@ export default function RepoSection() {
             sourceRepoUrl: data.sourceRepoUrl || "",
             sourceBranch: data.sourceBranch || "main"
           });
-          if (data.blogPath) localStorage.setItem('targetBlogPath', data.blogPath);
+          if (data.blogPath) try { localStorage.setItem('targetBlogPath', data.blogPath); } catch {}
         }
       } catch (e) { console.error("加载配置失败"); }
     };

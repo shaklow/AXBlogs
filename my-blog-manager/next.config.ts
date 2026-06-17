@@ -12,11 +12,6 @@ const nextConfig: NextConfig = {
   typescript: {
     ignoreBuildErrors: true,
   },
-
-  // 👇 终极大招 2：顺手把 ESLint 语法检查也屏蔽了，防止它出来捣乱！
-  eslint: {
-    ignoreDuringBuilds: true,
-  },
 };
 
 export default nextConfig;

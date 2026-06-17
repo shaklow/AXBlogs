@@ -1,7 +1,7 @@
 {
-  "blogPath": "D:\\DEVC++\\XinghuisamaBlogs\\XHBlogs",
-  "staticRepoUrl": "",
-  "staticBranch": "gh-pages",
+  "blogPath": "/home/erenche/Desktop/AXBlogs/",
+  "staticRepoUrl": "git@github.com:shaklow/AXBlogs.git",
+  "staticBranch": "main",
   "sourceRepoUrl": "",
   "sourceBranch": "main"
 }
