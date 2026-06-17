@@ -1,7 +1,7 @@
 "use client";
 import { createContext, useContext, useEffect, useState } from 'react';
 
-const ThemeContext = createContext({ isDark: true, toggleTheme: () => {} });
+const ThemeContext = createContext({ isDark: true, toggleTheme: () => { } });
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
   // 默认设为 true，这样在读取到配置前，如果是夜间模式就不会闪烁
@@ -43,14 +43,11 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     localStorage.setItem('blog-theme', newDark ? 'dark' : 'light');
   };
 
-  // 在客户端挂载完成前，为了防止闪屏，先隐藏内容
-  if (!mounted) {
-    return <div className="invisible">{children}</div>;
-  }
-
   return (
     <ThemeContext.Provider value={{ isDark, toggleTheme }}>
-      {children}
+      <div className={mounted ? '' : 'invisible'}>
+        {children}
+      </div>
     </ThemeContext.Provider>
   );
 }
